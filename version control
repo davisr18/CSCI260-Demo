@@ -1,0 +1,105 @@
+Question 2a: 
+commit b8b2f42a7dd4920340c7f105410b49fb5d58a0bc (HEAD -> master, origin/master,                                                      origin/HEAD) Author: bob <bob@a03d2bdc-e443-11dc-a185-ff1495ed1cd9> Date:   Tue Feb 26 08:31:25 2008 +0000 Initial import 
+ 
+Question 2b: 
+$ git status On branch master Your branch is ahead of 'origin/master' by 1 commit.   (use "git push" to publish your local commits) 
+ 
+Untracked files:   (use "git add <file>..." to include in what will be committed) 
+ 
+        bin/ 
+ 
+nothing added to commit but untracked files present (use "git add" to track) 
+ 
+ 
+$ git log commit 4ecf894306c44532ddc0809db2b34c3ec030c024 (HEAD -> master) Author: Roslyn <davisr18@xavier.edu> Date:   Thu Mar 15 10:50:56 2018 -0400 
+ 
+    Improved the spec and added a Makefile 
+ 
+commit b8b2f42a7dd4920340c7f105410b49fb5d58a0bc (origin/master, origin/HEAD) Author: bob <bob@a03d2bdc-e443-11dc-a185-ff1495ed1cd9> Date:   Tue Feb 26 08:31:25 2008 +0000 
+ 
+    Initial import 
+ 
+Question 2c: 
+The commands I used was $git add and $git commit -m. I created the .gitignore file in a text editor and I changed it from a .txt file to create a regular all files file. 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (master) $ git add .gitignore 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (master) $ git commit -m '.gitignore is added' [master ee49094] .gitignore is added  1 file changed, 1 insertion(+)  create mode 100644 .gitignore 
+ 
+Question 2d: 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci) $ git branch -a * fibonacci   master   remotes/origin/HEAD -> origin/master   remotes/origin/master   remotes/origin/stack   remotes/origin/test 
+ 
+Question 2e: 
+Output of merge command: 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci) $ git merge stack Auto-merging src/fib.c CONFLICT (content): Merge conflict in src/fib.c Automatic merge failed; fix conflicts and then commit the result. 
+ 
+In file src/fib.c, there is a conflict merging so I opened the file and saw that my code was placed in the doc and then Sally’s code was added after the double line.  
+int fib(int n) { 
+<<<<<<< HEAD 
+  return fib(n-2) + fib(n-1); 
+======= 
+ if (n == 0) return 0; 
+ if (n == 1) return 1; 
+ printf("fib(%d): unimplemented!\n", n); 
+ return -1; 
+>>>>>>> stack 
+} 
+My code was the top half and her code was the bottom half. Because we don’t have the same code, I resolved the conflict by going into the file and deleting Sally’s code. The file went back to looking like: 
+int fib(int n) { 
+  return fib(n-2) + fib(n-1); 
+} 
+After this, I did git status to see what was successful and what needed to be committed. I committed the src/fib.c file by adding then committing and I was successful. 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci|MERGING) $ git status On branch fibonacci You have unmerged paths.   (fix conflicts and run "git commit")   (use "git merge --abort" to abort the merge) 
+ 
+Changes to be committed: 
+ 
+        modified:   include/stack.h         modified:   src/stack.c 
+ 
+Unmerged paths:   (use "git add <file>..." to mark resolution) 
+ 
+        both modified:   src/fib.c 
+ 
+
+ GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci|MERGING) $ git add src/fib.c 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci|MERGING) $ git commit -m 'modified src/fib.c' [fibonacci ef3191f] modified src/fib.c 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci) $ git status On branch fibonacci nothing to commit, working tree clean 
+ 
+Question 2f: 
+When applying the reversion, I looked into the file: 
+$ git diff e51fe64 e51fe64^ diff --git a/src/stack.c b/src/stack.c index 4cdae47..2803c33 100644 --- a/src/stack.c +++ b/src/stack.c @@ -24,7 +24,8 @@ int pop(void) {  } 
+ 
+ int peek(void) { -       return *p1; +       printf("peek: unimplemented\n"); +       return 0;  } 
+ 
+ 
+I typed: 
+$ git revert e51fe64   
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci) $ git revert e51fe64 On branch fibonacci nothing to commit, working tree clean 
+ 
+Question 2g: 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (fibonacci) $ git checkout master Switched to branch 'master' Your branch is ahead of 'origin/master' by 2 commits.   (use "git push" to publish your local commits) 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (master) $ git merge fibonacci Updating ee49094..cff53c9 Fast-forward  include/stack.h |  2 ++  src/fib.c       |  3 +--  src/stack.c     | 23 +++++++----------------  3 files changed, 10 insertions(+), 18 deletions(-) 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (master) $ git add . 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (master) $ git commit -m 'branches are merged' On branch master Your branch is ahead of 'origin/master' by 10 commits.   (use "git push" to publish your local commits) 
+
+ nothing to commit, working tree clean 
+ 
+GIFTED@GIFTED-PC MINGW64 ~/CSCI260-HW1 (master) $ git diff origin/master master diff --git a/.gitignore b/.gitignore new file mode 100644 index 0000000..6dd29b7 --- /dev/null +++ b/.gitignore @@ -0,0 +1 @@ +bin/ \ No newline at end of file diff --git a/Makefile b/Makefile new file mode 100644 index 0000000..facb317 --- /dev/null +++ b/Makefile @@ -0,0 +1,22 @@ +CC = gcc +CFLAGS = -Wall + +all: bin/main + +bin/main: bin/main.o bin/stack.o bin/fib.o +       $(CC) $(CFLAGS) -o bin/main bin/main.o bin/fib.o bin/stack.o + +bin/main.o: bindir src/main.c include/stack.h include/fib.h +       $(CC) $(CFLAGS) -Iinclude -c src/main.c -o bin/main.o + +bin/stack.o: bindir src/stack.c +       $(CC) $(CFLAGS) -c src/stack.c -o bin/stack.o + +bin/fib.o: bindir src/fib.c +       $(CC) $(CFLAGS) -c src/fib.c -o bin/fib.o + +bindir: +       test -d bin || mkdir bin + +clean: +       rm -rf bin diff --git a/doc/spec.txt b/doc/spec.txt index 77a0179..56beb7a 100644 --- a/doc/spec.txt +++ b/doc/spec.txt @@ -1 +1 @@ -Draft spec for project: TODO +Draft spec for project: TODO made new changes diff --git a/include/stack.h b/include/stack.h index 302be84..72a9ca8 100644 --- a/include/stack.h +++ b/include/stack.h @@ -1,7 +1,9 @@ +  /* Global stack implementation */ 
+ 
+ void push(int k); 
+ 
+ int pop(); 
+ 
++int peek(); 
+ 
+diff --git a/src/fib.c b/src/fib.c index 8724a88..013fc74 100644 --- a/src/fib.c +++ b/src/fib.c @@ -1,6 +1,5 @@  #include <stdio.h> 
+ 
+ int fib(int n) { -    printf("fib: unimplemented!\n"); -    return -1; 
++  return fib(n-2) + fib(n-1);  } diff --git a/src/stack.c b/src/stack.c index 30d0911..2803c33 100644 --- a/src/stack.c +++ b/src/stack.c @@ -1,21 +1,6 @@  #include <stdio.h>  #include <stdlib.h> 
+ 
+-void push(int i) { -       printf("push(%d): unimplemented\n", i); -} - -int pop(void) { -       printf("pop: unimplemented\n"); -       return 0; -} - -int peek(void) { -       printf("peek: unimplemented\n"); -       return 0; -} - -/*  #define SIZE 50 
+ 
+ int stack[SIZE], *tos = stack, *p1 = stack; @@ -37,4 +22,10 @@ int pop(void) {         p1--;         return *(p1+1);  } -*/ + +int peek(void) { +       printf("peek: unimplemented\n"); 
