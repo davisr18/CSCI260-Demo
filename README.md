@@ -2,4 +2,6 @@
 Question 2h Homework 1
 
 Created this Repo from the terminal
-This was version Control
+
+This was version Control practice
+
